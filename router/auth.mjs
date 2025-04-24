@@ -22,7 +22,7 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 
 // 로그인 유지
-router.get("/check", authController.check);
+router.get("/me", authController.check);
 
 // 로그아웃
 router.get("/logout", authController.logout);
