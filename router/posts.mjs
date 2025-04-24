@@ -1,5 +1,5 @@
 import express from "express";
-
+import * as postcontroller from "../controller/post.mjs";
 const router = express.Router();
 
 // 모든 포스트 가져오기
@@ -7,7 +7,7 @@ const router = express.Router();
 // GET
 // http://127.0.0.1:8080/posts
 // http://127.0.0.1:8080/posts?userid=apple
-
+router.get("/", postcontroller.getPosts);
 // 글번호에 대한 포스트 가져오기
 // GET
 // http://127.0.0.1:8080/posts/:id

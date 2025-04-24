@@ -2,7 +2,7 @@ import express from "express";
 import postsRouter from "./router/posts.mjs";
 import authRouter from "./router/auth.mjs";
 
-const app = espress();
+const app = express();
 
 app.use(express.json());
 
