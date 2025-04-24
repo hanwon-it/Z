@@ -11,19 +11,19 @@ router.get("/", postcontroller.getPosts);
 // 글번호에 대한 포스트 가져오기
 // GET
 // http://127.0.0.1:8080/posts/:id
-
+router.get("/:id", postcontroller.getPost);
 // 포스트 쓰기
 // POST
 // http://127.0.0.1:8080/posts
 // json 형태로 입력 후 저장
-
+router.post("/", postcontroller.createPost);
 // 포스트 수정하기
 // PUT
 // http://127.0.0.1:8080/posts
 // json 형태로 입력 후 저장
-
+router.put("/:id", postcontroller.updatePost);
 // 포스트 삭제하기
 // DELETE
 // http://127.0.0.1:8080/posts/:id
-
+router.delete("/:id", postcontroller.removePost);
 export default router;
