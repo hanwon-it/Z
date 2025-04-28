@@ -1,29 +1,40 @@
 import express from "express";
 import * as postcontroller from "../controller/post.mjs";
+import { body } from "express-validator";
+
+// 4-28 추가
+import { validate } from "../middleware/validator.mjs";
+import { isAuth } from "../middleware/auth.mjs";
+//
 const router = express.Router();
+
+const validatePost = [
+  body("text").trim().isLength({ min: 5 }).withMessage("최소 5자 이상 입력"),
+  validate,
+];
 
 // 모든 포스트 가져오기
 // 해당 아이디에 대한 포스트 가져오기
 // GET
 // http://127.0.0.1:8080/posts
 // http://127.0.0.1:8080/posts?userid=apple
-router.get("/", postcontroller.getPosts);
+router.get("/", isAuth, postcontroller.getPosts);
 // 글번호에 대한 포스트 가져오기
 // GET
 // http://127.0.0.1:8080/posts/:id
-router.get("/:id", postcontroller.getPost);
+router.get("/:id", isAuth, postcontroller.getPost);
 // 포스트 쓰기
 // POST
 // http://127.0.0.1:8080/posts
 // json 형태로 입력 후 저장
-router.post("/", postcontroller.createPost);
+router.post("/", validatePost, isAuth, postcontroller.createPost);
 // 포스트 수정하기
 // PUT
 // http://127.0.0.1:8080/posts
 // json 형태로 입력 후 저장
-router.put("/:id", postcontroller.updatePost);
+router.put("/:id", validatePost, isAuth, postcontroller.updatePost);
 // 포스트 삭제하기
 // DELETE
 // http://127.0.0.1:8080/posts/:id
-router.delete("/:id", postcontroller.removePost);
+router.delete("/:id", isAuth, postcontroller.removePost);
 export default router;
