@@ -1,9 +1,11 @@
 import express from "express";
 import * as postcontroller from "../controller/post.mjs";
 import { body } from "express-validator";
+
+// 4-28 추가
 import { validate } from "../middleware/validator.mjs";
 import { isAuth } from "../middleware/auth.mjs";
-
+//
 const router = express.Router();
 
 const validatePost = [
