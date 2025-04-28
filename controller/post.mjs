@@ -50,5 +50,5 @@ export async function updatePost(req, res, next) {
 export async function removePost(req, res, next) {
   const id = req.params.id;
   await postRepository.remove(id);
-  res.sendstatus(204);
+  res.sendStatus(204);
 }
