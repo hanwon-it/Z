@@ -1,6 +1,14 @@
 import express from "express";
 import * as postcontroller from "../controller/post.mjs";
+import { body } from "express-validator";
+import { validate } from "../middleware/validator.mjs";
+
 const router = express.Router();
+
+const validatePost = [
+  body("text").trim().isLength({ min: 5 }).withMessage("최소 5자 이상 입력"),
+  validate,
+];
 
 // 모든 포스트 가져오기
 // 해당 아이디에 대한 포스트 가져오기
@@ -16,12 +24,12 @@ router.get("/:id", postcontroller.getPost);
 // POST
 // http://127.0.0.1:8080/posts
 // json 형태로 입력 후 저장
-router.post("/", postcontroller.createPost);
+router.post("/", validatePost, postcontroller.createPost);
 // 포스트 수정하기
 // PUT
 // http://127.0.0.1:8080/posts
 // json 형태로 입력 후 저장
-router.put("/:id", postcontroller.updatePost);
+router.put("/:id", validatePost, postcontroller.updatePost);
 // 포스트 삭제하기
 // DELETE
 // http://127.0.0.1:8080/posts/:id
