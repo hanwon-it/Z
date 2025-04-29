@@ -27,14 +27,14 @@ const validateSignup = [
   validate,
 ];
 
-// 회원가입
+// 회원가입  validateSignup,
 // POST
 // http://127.0.0.1:8080/auth/signup
-router.post("/signup", validateSignup, authController.signup);
-// 로그인
+router.post("/signup", authController.signup);
+// 로그인   validateLogin,
 // POST
 // http://127.0.0.1:8080/auth/login
-router.post("/login", validateLogin, authController.login);
+router.post("/login", authController.login);
 // 로그인 유지
 
 export default router;
