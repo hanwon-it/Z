@@ -2,17 +2,18 @@ import express from "express";
 import * as authRepository from "../data/auth.mjs";
 import * as bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { config } from "../config.mjs";
 
-const secretkey = "abcdefg1234%^&*";
-const bcryptSaltRounds = 10;
-const jwtExpiresInDays = "2d";
+const secretKey = config.jwt.secretKey;
+const bcryptSaltRounds = config.bcrypt.saltRounds;
+const jwtExpiresInDays = config.jwt.expiresInSec;
 
 async function createJwtToken(id) {
-  return jwt.sign({ id }, secretkey, { expiresIn: jwtExpiresInDays });
+  return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
 }
 
 export async function signup(req, res, next) {
-  const { userid, password, name, email } = req.body;
+  const { userid, password, name, email, url } = req.body;
 
   // 회원 중복 체크
   const found = await authRepository.findByUserid(userid);
@@ -22,8 +23,14 @@ export async function signup(req, res, next) {
 
   const hashed = bcrypt.hashSync(password, bcryptSaltRounds);
 
-  const users = await authRepository.createUser(userid, hashed, name, email);
-  const token = await createJwtToken(users.id);
+  const users = await authRepository.createUser({
+    userid,
+    password: hashed,
+    name,
+    email,
+    url,
+  });
+  const token = await createJwtToken(users.idx);
   console.log(token);
   if (users) {
     res.status(201).json({ token, userid });

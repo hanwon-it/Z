@@ -22,3 +22,5 @@ DROP TABLE todos;
 
 select * from users;
 select * from posts;
+
+select * from users where userid = 'apple';
