@@ -8,7 +8,7 @@ const secretKey = config.jwt.secretKey;
 const bcryptSaltRounds = config.bcrypt.saltRounds;
 const jwtExpiresInDays = config.jwt.expiresInSec;
 
-async function createJwtToken(id) {
+async function createJwtToken(idx) {
   return jwt.sign({ idx }, secretKey, { expiresIn: jwtExpiresInDays });
 }
 
@@ -48,7 +48,7 @@ export async function login(req, res, next) {
     return res.status(401).json({ message: "아이디 또는 비밀번호 확인 " });
   }
 
-  const token = await createJwtToken(user.id);
+  const token = await createJwtToken(user.idx);
   res.status(200).json({ token, userid });
 }
 

@@ -50,6 +50,13 @@ export async function updatePost(req, res, next) {
 // 포스트를 삭제하는 함수
 export async function removePost(req, res, next) {
   const id = req.params.id;
+  const post = await postRepository.getById(id);
+  if (!post) {
+    return res.status(404).json({ message: `${id}의 포스트가 없습니다` });
+  }
+  if (post.useridx !== req.useridx) {
+    return res.sendStatus(403);
+  }
   await postRepository.remove(id);
   res.sendStatus(204);
 }
