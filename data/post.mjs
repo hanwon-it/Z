@@ -1,3 +1,7 @@
+import { getPosts } from "../db/database.mjs";
+import MongoDb from "mongodb";
+import * as UserRepository from "./auth.mjs";
+
 let posts = [
   {
     id: "1",
@@ -43,13 +47,13 @@ let posts = [
 
 // 모든 포스트를 리턴
 export async function getAll() {
-  return posts;
+  return getPosts().find().sort({ createAt: -1 }).toArray();
 }
 
 // 사용자 아이디(userid)에 대한 포스트를 리턴
 // filter -> 조건을 만족하는 모든 요소를 배열로 리턴
 export async function getAllByUserid(userid) {
-  return posts.filter((post) => post.userid === userid);
+  return getPosts().find({ userid }).sort({ createAt: -1 }).toArray();
 }
 
 // 글 번호(id)에 대한 포스트를 리턴
@@ -59,16 +63,22 @@ export async function getById(id) {
 }
 
 // 포스트 작성
-export async function create(userid, name, text) {
-  const post = {
-    id: Date.now().toString(),
-    userid,
-    name,
-    text,
-    createdAt: Date.now().toString(),
-  };
-  posts = [post, ...posts];
-  return posts;
+export async function create(text, id) {
+  console.log("id: ", id);
+  return UserRepository.findByid(id).then((user) =>
+    getPosts()
+      .insertOne({
+        text,
+        createAt: new Date(),
+        useridx: user.id,
+        name: user.name,
+        userid: user.userid,
+        url: user.url,
+      })
+      .then((result) => {
+        return getPosts().findOne({ _id: result.insertedId });
+      })
+  );
 }
 
 // 포스트 변경
