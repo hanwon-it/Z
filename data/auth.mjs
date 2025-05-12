@@ -40,34 +40,38 @@
 //     url: "https://randomuser.me/api/portraits/men/29.jpg",
 //   },
 // ];
+import Mongoose from "mongoose";
+import { useVirtualId } from "../db/database.mjs";
 
-import MongoDb, { ObjectId } from "mongodb";
-import { getUsers } from "../db/database.mjs";
+const userSchema = new Mongoose.Schema(
+  {
+    userid: { type: String, require: true },
+    name: { type: String, require: true },
+    email: { type: String, require: true },
+    password: { type: String, require: true },
+    url: String,
+  },
+  { versionKey: false }
+);
 
-const ObjectID = MongoDb.ObjectId;
+useVirtualId(userSchema);
+
+const User = Mongoose.model("User", userSchema);
 
 export async function createUser(user) {
-  return getUsers()
-    .insertOne(user)
-    .then((result) => result.insertedId.toString());
+  return new User(user).save().then((data) => data.id);
 }
 
-export async function login(userid, password) {
-  const user = users.find(
-    (user) => user.userid === userid && user.password === password
-  );
-  return user;
-}
+// export async function login(userid, password) {
+//   return User.findOne({ userid });
+// }
 
 export async function findByUserid(userid) {
-  return getUsers().find({ userid }).next().then(mapOptionalUser);
+  return User.findOne({ userid });
 }
 
 export async function findByid(id) {
-  return getUsers()
-    .find({ _id: new ObjectID(id) })
-    .next()
-    .then(mapOptionalUser);
+  return User.findById(id);
 }
 
 function mapOptionalUser(user) {
